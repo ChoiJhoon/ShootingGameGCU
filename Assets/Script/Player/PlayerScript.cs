@@ -8,8 +8,10 @@ public class PlayerScript : MonoBehaviour
     private float moveForce = 7.0f;
     private float x_Axis;
     private float z_Axis;
+    private float previousX_Axis;
     [SerializeField]
     private float power;
+    public Animator animator;
 
     [SerializeField]
     private GameObject bullet;
@@ -21,15 +23,17 @@ public class PlayerScript : MonoBehaviour
     [SerializeField]
     private GameObject currentShield;
     private bool isShieldActive = false;
-    private float shieldDuration = 3f;
-    private float shieldCooldown = 5f;
+    [SerializeField] private float shieldDuration = 3f;
+    [SerializeField] private float shieldCooldown = 5f;
     private bool isShieldOnCooldown = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        animator = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody>();
         InitializeBulletPool();
+        previousX_Axis = 0f;
     }
     private void InitializeBulletPool()
     {
@@ -47,6 +51,7 @@ public class PlayerScript : MonoBehaviour
         Shooting();
         Shield();
         CamerainPlayer();
+        HandleAnimations();
     }
 
     private void PlayerMovement()
@@ -57,12 +62,31 @@ public class PlayerScript : MonoBehaviour
         Vector3 velocity = new Vector3(x_Axis, 0, z_Axis);
         velocity *= moveForce;
         rigid.velocity = velocity;
+    }
+    private void HandleAnimations()
+    {
+        animator.ResetTrigger("LeftMove");
+        animator.ResetTrigger("RightMove");
+        animator.ResetTrigger("Idle");
 
-        foreach (Transform child in transform)
+        if (x_Axis < 0)
         {
-            child.localPosition = Vector3.zero;
+            Debug.Log("LeftMove Trigger Set");
+            animator.SetTrigger("LeftMove");
+        }
+        else if (x_Axis > 0)
+        {
+            Debug.Log("RightMove Trigger Set");
+            animator.SetTrigger("RightMove");
+        }
+        else if (x_Axis == 0 && z_Axis == 0)
+        {
+            Debug.Log("Idle Trigger Set");
+            animator.SetTrigger("Idle");
         }
     }
+
+
 
     private void Shooting()
     {
@@ -100,7 +124,7 @@ public class PlayerScript : MonoBehaviour
 
     void ActivateShield()
     {
-        Vector3 offset = transform.forward * 0.8f;
+        Vector3 offset = transform.forward * 1;
         // 쉴드를 플레이어의 위치에 offset을 더해 앞으로 이동시켜 생성합니다.
         currentShield = Instantiate(shieldPrefab, transform.position + offset, transform.rotation);
         // 쉴드 활성화 상태로 변경합니다.

@@ -53,7 +53,7 @@ public class ShootingEnemy : MonoBehaviour
             }
         }
 
-        // 모든 총알이 사용 중인 경우 새로운 총알을 추가 (옵션)
+        // 모든 총알이 사용 중인 경우 새로운 총알을 추가
         GameObject newBullet = Instantiate(enemyBulletPrefab);
         newBullet.SetActive(false);
         bulletPool.Add(newBullet);
