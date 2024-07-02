@@ -16,7 +16,7 @@ public class GameOverManager : MonoBehaviour
     public void HideGameOver()
     {
         gameOverUI.SetActive(false);
-        Time.timeScale = 1f; // Optional: Resume the game
+        Time.timeScale = 1f;
     }
 
     // Optional: Method to restart the game

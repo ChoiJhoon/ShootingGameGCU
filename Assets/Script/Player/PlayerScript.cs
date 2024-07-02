@@ -36,6 +36,7 @@ public class PlayerScript : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         InitializeBulletPool();
         previousX_Axis = 0f;
+        gameOverManager = FindObjectOfType<GameOverManager>();
     }
     private void InitializeBulletPool()
     {
@@ -154,13 +155,13 @@ public class PlayerScript : MonoBehaviour
         if (other.CompareTag("Enemy") || other.CompareTag("Boss") ||
             other.CompareTag("SuicideEnemy") || other.CompareTag("ShootingEnemys"))
         {
+            Debug.Log("사망");
             HandleGameOver();
         }
     }
 
     private void HandleGameOver()
     {
-        // 게임 오버 UI를 활성화하고 게임을 일시 정지할 수 있습니다.
         gameOverManager.ShowGameOver();
     }
 }
