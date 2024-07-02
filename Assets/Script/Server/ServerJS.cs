@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using UnityEngine.Networking;
 using System.Text;
 
-public class ServerJS : MonoBehaviour
+public class RankMain : MonoBehaviour
 {
     public string host;
     public int port;
@@ -124,4 +124,5 @@ public class ServerJS : MonoBehaviour
             callback(webRequest.downloadHandler.text);
         }
     }
+
 }
