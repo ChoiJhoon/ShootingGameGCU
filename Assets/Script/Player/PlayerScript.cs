@@ -51,39 +51,22 @@ public class PlayerScript : MonoBehaviour
         Shooting();
         Shield();
         CamerainPlayer();
-        HandleAnimations();
     }
 
     private void PlayerMovement()
     {
-        x_Axis = Input.GetAxis("Horizontal");
-        z_Axis = Input.GetAxis("Vertical");
+        x_Axis = Input.GetAxisRaw("Horizontal");
+        z_Axis = Input.GetAxisRaw("Vertical");
 
         Vector3 velocity = new Vector3(x_Axis, 0, z_Axis);
         velocity *= moveForce;
         rigid.velocity = velocity;
+
+        HandleAnimations();
     }
     private void HandleAnimations()
     {
-        animator.ResetTrigger("LeftMove");
-        animator.ResetTrigger("RightMove");
-        animator.ResetTrigger("Idle");
-
-        if (x_Axis < 0)
-        {
-            Debug.Log("LeftMove Trigger Set");
-            animator.SetTrigger("LeftMove");
-        }
-        else if (x_Axis > 0)
-        {
-            Debug.Log("RightMove Trigger Set");
-            animator.SetTrigger("RightMove");
-        }
-        else if (x_Axis == 0 && z_Axis == 0)
-        {
-            Debug.Log("Idle Trigger Set");
-            animator.SetTrigger("Idle");
-        }
+        animator.SetFloat("New Float", x_Axis);       
     }
 
 
