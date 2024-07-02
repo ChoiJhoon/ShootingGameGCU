@@ -7,10 +7,16 @@ public class BulletManager : MonoBehaviour
     public float force = 10.0f;
     private Rigidbody rb;
 
+    public int damage;
+
+    public void SetDamage(int damage)
+    {
+        this.damage = damage;
+    }
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-
         rb.AddForce(transform.forward * force);
     }
 
@@ -26,9 +32,32 @@ public class BulletManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("Boss"))
         {
-            gameObject.SetActive(false);
+            BossScript boss = other.GetComponent<BossScript>();
+            if (boss != null)
+            {
+                boss.TakeDamage(damage);
+            }
+            DeactivateBullet();
+        }
+        else if (other.CompareTag("SuicideEnemy"))
+        {
+            SuicideBombing suicideEnemy = other.GetComponent<SuicideBombing>();
+            if (suicideEnemy != null)
+            {
+                suicideEnemy.TakeDamage(damage);
+            }
+            DeactivateBullet();
+        }
+        else if (other.CompareTag("ShootingEnemys"))
+        {
+            ShootingEnemy shootingEnemy = other.GetComponent<ShootingEnemy>();
+            if (shootingEnemy != null)
+            {
+                shootingEnemy.TakeDamage(damage);
+            }
+            DeactivateBullet();
         }
     }
 }

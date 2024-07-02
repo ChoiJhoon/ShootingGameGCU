@@ -10,13 +10,15 @@ public class PlayerScript : MonoBehaviour
     private float z_Axis;
     private float previousX_Axis;
     [SerializeField]
-    private float power;
+    public float power;
     public Animator animator;
 
     [SerializeField]
     private GameObject bullet;
     private GameObject[] bulletPool;
     public Transform FirePos;
+
+    private GameOverManager gameOverManager;
 
     [SerializeField]
     private GameObject shieldPrefab;
@@ -69,8 +71,6 @@ public class PlayerScript : MonoBehaviour
         animator.SetFloat("New Float", x_Axis);       
     }
 
-
-
     private void Shooting()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -82,6 +82,8 @@ public class PlayerScript : MonoBehaviour
                 bullet.transform.rotation = FirePos.rotation;
                 bullet.SetActive(true);
             }
+            BulletManager bulletScript = bullet.GetComponent<BulletManager>();
+            bulletScript.SetDamage((int)power);
         }
     }
 
@@ -144,5 +146,21 @@ public class PlayerScript : MonoBehaviour
         worldpos.x = Mathf.Clamp01(worldpos.x);
         worldpos.y = Mathf.Clamp01(worldpos.y);
         this.transform.position = Camera.main.ViewportToWorldPoint(worldpos);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // 충돌한 객체의 태그를 확인하여 게임 오버 처리
+        if (other.CompareTag("Enemy") || other.CompareTag("Boss") ||
+            other.CompareTag("SuicideEnemy") || other.CompareTag("ShootingEnemys"))
+        {
+            HandleGameOver();
+        }
+    }
+
+    private void HandleGameOver()
+    {
+        // 게임 오버 UI를 활성화하고 게임을 일시 정지할 수 있습니다.
+        gameOverManager.ShowGameOver();
     }
 }

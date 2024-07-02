@@ -9,6 +9,7 @@ public class ShootingEnemy : MonoBehaviour
     public Transform firePoint; // 총알이 발사될 위치
     public float fireRate = 2.0f; // 발사 간격
     public int poolSize = 10; // 오브젝트 풀의 크기
+    public int MobsLife = 10;
 
     private List<GameObject> bulletPool; // 총알 풀
     private int currentIndex = 0; // 현재 사용할 총알 인덱스
@@ -58,5 +59,18 @@ public class ShootingEnemy : MonoBehaviour
         newBullet.SetActive(false);
         bulletPool.Add(newBullet);
         return newBullet;
+    }
+    public void TakeDamage(int damage)
+    {
+        MobsLife -= damage;
+        if (MobsLife <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Destroy(gameObject);
     }
 }

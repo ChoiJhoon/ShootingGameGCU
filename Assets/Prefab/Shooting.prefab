@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 7602217077372695273}
   m_Layer: 0
   m_Name: Shooting
-  m_TagString: Enemy
+  m_TagString: ShootingEnemys
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -180,6 +180,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1437289d274748047853489c83419f62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyBullet: {fileID: 7452012078531006919, guid: eab12149c41cb8f4f8360c41d7b2d028, type: 3}
+  enemyBulletPrefab: {fileID: 0}
   firePoint: {fileID: 2843837393863084919}
   fireRate: 2
+  poolSize: 10
+  MobsLife: 10

@@ -5,6 +5,7 @@ using UnityEngine;
 public class SuicideBombing : MonoBehaviour
 {
     public float speed = -5.0f;
+    public int MobsLife = 10;
 
     private Rigidbody rb;
 
@@ -26,10 +27,24 @@ public class SuicideBombing : MonoBehaviour
 
     public void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player")) 
         {
-            Debug.Log("피격 당함");
+            Debug.Log("플레이어 공격");
             Destroy(this.gameObject);
         }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        MobsLife -= damage;
+        if (MobsLife <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Destroy(gameObject);
     }
 }
