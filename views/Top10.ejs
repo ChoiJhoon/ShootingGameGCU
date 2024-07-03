@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top 10 Scores</title>
+</head>
+<body>
+    <h1>Top 10 Scores</h1>
+    <ul>
+        <% scores.forEach(item => { %>
+            <li>ID: <%= item._id %>, Score: <%= item.score %></li>
+        <% }); %>
+    </ul>
+</body>
+</html>
