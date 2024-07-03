@@ -76,7 +76,7 @@ public class RankMain : MonoBehaviour
             req.cmd = 1000; //(int)Protocols.eType.POST_SCORE;
             req.id = UserNickname.playerName;
             req.score = ScoreUI.score;
-            //req.score = scriptableObject.score;
+            //req.score = scriptableObject  score;
             // 직렬화  (오브젝트 -> 문자열)
             var json = JsonConvert.SerializeObject(req);
             Debug.Log(json);

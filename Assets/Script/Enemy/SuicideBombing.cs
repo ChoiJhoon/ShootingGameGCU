@@ -1,18 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class SuicideBombing : MonoBehaviour
 {
     public float speed = -5.0f;
     public int MobsLife = 10;
+    public int mobScore = 20;
 
     private Rigidbody rb;
+
+    private ScoreUI scoreUI;
+
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
+        scoreUI = FindObjectOfType<ScoreUI>(); // ScoreUI °´Ã¼ ÂüÁ¶
+
     }
 
     private void Update()
@@ -45,6 +52,10 @@ public class SuicideBombing : MonoBehaviour
 
     private void Die()
     {
+        if (scoreUI != null)
+        {
+            scoreUI.AddMobScore(mobScore);
+        }
         Destroy(gameObject);
     }
 }

@@ -14,10 +14,16 @@ public class ShootingEnemy : MonoBehaviour
     private List<GameObject> bulletPool; // ÃÑ¾Ë Ç®
     private int currentIndex = 0; // ÇöÀç »ç¿ëÇÒ ÃÑ¾Ë ÀÎµ¦½º
 
+    public int MobScore = 20;
+
+    private ScoreUI scoreUI;
+
     private void Start()
     {
         InitializeBulletPool();
         InvokeRepeating("Shoot", 0f, fireRate);
+        scoreUI = FindObjectOfType<ScoreUI>(); // ScoreUI °´Ã¼ ÂüÁ¶
+
     }
 
     private void InitializeBulletPool()

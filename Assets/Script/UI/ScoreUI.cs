@@ -43,5 +43,11 @@ public class ScoreUI : MonoBehaviour
         CancelInvoke("ScoreIncrease");
         InvokeRepeating("ScoreIncrease", scoreIncreaseInterval, scoreIncreaseInterval);
     }
+
+    public void AddMobScore(int mobScore)
+    {
+        score += mobScore;
+        UpdateUI();
+    }
 }
 
