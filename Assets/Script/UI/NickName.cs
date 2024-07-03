@@ -1,42 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class NickName : MonoBehaviour
 {
-    public TMP_InputField nicknameTMPInputField; // Text Area를 Inspector에서 할당해야 합니다.
-    private string PlayerName = null;
+    public TMP_InputField playerIDInputField;
+    public Button startGameButton;
 
-    // 게임 시작 버튼을 누를 때 호출할 메서드
-    public void OnGameStartButtonPressed()
+    public string playerName = null;
+
+    private void Awake()
     {
-        InputName(); // 닉네임을 입력하면 바로 저장하도록 호출
+        playerName = playerIDInputField.GetComponent<TMP_InputField>().text;
     }
 
-    private void InputName()
+    private void Start()
     {
-        // TMP Input Field가 null인 경우 에러 로그 출력 후 메서드 종료
-        if (nicknameTMPInputField == null)
-        {
-            Debug.LogError("TMP_InputField is not assigned in the Inspector.");
-            return;
-        }
+        // 게임 시작 버튼에 클릭 이벤트 리스너 추가
+        startGameButton.onClick.AddListener(OnStartGameButtonClicked);
+    }
 
-        PlayerName = nicknameTMPInputField.text;
-        PlayerPrefs.SetString("CurrentPlayerName", PlayerName);
+    private void OnStartGameButtonClicked()
+    {
+        playerName = playerIDInputField.text;
+        PlayerPrefs.SetString("CurrentPlayerName", playerName);
 
-        // SpawnManagerScriptableObject.Instance가 null이 아닌지 확인 후 호출
-        if (SpawnManagerScriptableObject.Instance != null)
-        {
-            SpawnManagerScriptableObject.Instance.ScoreSet(SpawnManagerScriptableObject.Instance.score, PlayerName);
-        }
-        else
-        {
-            Debug.LogError("SpawnManagerScriptableObject.Instance is null. Make sure the resource path is correct.");
-            return; // 오류 발생 시 메서드 종료
-        }
+        string playerID = playerIDInputField.text;
 
-        Debug.Log("Entered nickname: " + PlayerName);
+        // ScriptableObject의 인스턴스에 ID 설정
+        SpawnManagerScriptableObject.Instance.ScoreSet(0, playerID);
+
+        // 디버그 로그로 확인
+        Debug.Log("Player ID: " + SpawnManagerScriptableObject.Instance.id);
     }
 }

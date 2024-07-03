@@ -14,7 +14,7 @@ public class RankMain : MonoBehaviour
     public string idUri;
     public string postUri;
 
-    public SpawnManagerScriptableObject scriptableObject;
+    public NickName UserNickname;
 
     public Button btnGetTop3;
     public Button btnGetId;
@@ -22,11 +22,32 @@ public class RankMain : MonoBehaviour
 
     void Start()
     {
-        this.btnGetTop3.onClick.AddListener(() => {
+        if (btnGetTop3 == null)
+        {
+            Debug.LogError("btnGetTop3 is not assigned.");
+            return;
+        }
+        if (btnGetId == null)
+        {
+            Debug.LogError("btnGetId is not assigned.");
+            return;
+        }
+        if (btnPost == null)
+        {
+            Debug.LogError("btnPost is not assigned.");
+            return;
+        }
+        if (UserNickname == null)
+        {
+            Debug.LogError("UserNickname is not assigned.");
+            return;
+        }
+
+        btnGetTop3.onClick.AddListener(() => {
             var url = string.Format("{0}:{1}/{2}", host, port, top3Uri);
             Debug.Log(url);
 
-            StartCoroutine(this.GetTop3(url, (raw) =>
+            StartCoroutine(GetTop3(url, (raw) =>
             {
                 var res = JsonConvert.DeserializeObject<Protocols.Packets.res_scores_top3>(raw);
                 Debug.LogFormat("{0}, {1}", res.cmd, res.result.Length);
@@ -35,44 +56,41 @@ public class RankMain : MonoBehaviour
                     Debug.LogFormat("{0} : {1}", user.id, user.score);
                 }
             }));
-
-
         });
-        this.btnGetId.onClick.AddListener(() => {
+
+        btnGetId.onClick.AddListener(() => {
             var url = string.Format("{0}:{1}/{2}", host, port, idUri);
             Debug.Log(url);
 
-            StartCoroutine(this.GetId(url, (raw) => {
-
+            StartCoroutine(GetId(url, (raw) => {
                 var res = JsonConvert.DeserializeObject<Protocols.Packets.res_scores_id>(raw);
                 Debug.LogFormat("{0}, {1}", res.result.id, res.result.score);
-
             }));
         });
-        this.btnPost.onClick.AddListener(() => {
+
+        btnPost.onClick.AddListener(() => {
             var url = string.Format("{0}:{1}/{2}", host, port, postUri);
             Debug.Log(url); //http://localhost:3030/scores
 
             var req = new Protocols.Packets.req_scores();
             req.cmd = 1000; //(int)Protocols.eType.POST_SCORE;
-            req.id = scriptableObject.id;
-            req.score = scriptableObject.score;
-            //직렬화  (오브젝트 -> 문자열)
+            req.id = UserNickname.playerName;
+            req.score = ScoreUI.score;
+            //req.score = scriptableObject.score;
+            // 직렬화  (오브젝트 -> 문자열)
             var json = JsonConvert.SerializeObject(req);
             Debug.Log(json);
             //{"id":"hong@nate.com","score":100,"cmd":1000}
 
-            StartCoroutine(this.PostScore(url, json, (raw) => {
+            StartCoroutine(PostScore(url, json, (raw) => {
                 Protocols.Packets.res_scores res = JsonConvert.DeserializeObject<Protocols.Packets.res_scores>(raw);
                 Debug.LogFormat("{0}, {1}", res.cmd, res.message);
             }));
-
         });
     }
 
     private IEnumerator GetTop3(string url, System.Action<string> callback)
     {
-
         var webRequest = UnityWebRequest.Get(url);
         yield return webRequest.SendWebRequest();
         if (webRequest.result == UnityWebRequest.Result.ConnectionError || webRequest.result == UnityWebRequest.Result.ProtocolError)
@@ -104,9 +122,8 @@ public class RankMain : MonoBehaviour
 
     private IEnumerator PostScore(string url, string json, System.Action<string> callback)
     {
-
         var webRequest = new UnityWebRequest(url, "POST");
-        var bodyRaw = Encoding.UTF8.GetBytes(json); //직렬화 (문자열 -> 바이트 배열)
+        var bodyRaw = Encoding.UTF8.GetBytes(json); // 직렬화 (문자열 -> 바이트 배열)
 
         webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
         webRequest.downloadHandler = new DownloadHandlerBuffer();
@@ -124,5 +141,4 @@ public class RankMain : MonoBehaviour
             callback(webRequest.downloadHandler.text);
         }
     }
-
 }
