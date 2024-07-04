@@ -8,12 +8,11 @@ let db;
 let collection;
 
 // MongoDB 클라이언트 생성
-const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
+const client = new MongoClient(url);
 
 // EJS 템플릿 설정
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '/views'));
-
+app.set('views', path.join(__dirname, '*/views'));
 
 // JSON 파싱 미들웨어 설정
 app.use(express.json());
@@ -88,6 +87,7 @@ app.get('/scores/:id', async (req, res) => {
     }
 });
 
+
 // 서버 시작 함수
 const main = async () => {
     try {
@@ -97,7 +97,7 @@ const main = async () => {
         collection = db.collection('Nick_Score');
 
         // 서버 시작
-        app.listen(3030, () => {
+        app.listen(3031, () => {
             console.log('서버가 3030 포트에서 실행 중입니다.');
         });
     } catch (err) {
