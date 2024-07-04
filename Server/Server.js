@@ -11,8 +11,9 @@ let collection;
 const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
 // EJS 템플릿 설정
-app.set('*/views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '/views'));
+
 
 // JSON 파싱 미들웨어 설정
 app.use(express.json());

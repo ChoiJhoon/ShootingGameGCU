@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,8 @@ public class BossScript : MonoBehaviour
 
     private ScoreUI scoreUI;
 
+    public static event Action OnBossDefeated;
+
     private void Start()
     {
         scoreUI = FindObjectOfType<ScoreUI>(); // ScoreUI °´Ã¼ ÂüÁ¶
@@ -17,6 +20,7 @@ public class BossScript : MonoBehaviour
     public void TakeDamage(int damage)
     {
         BossLife -= damage;
+        OnBossDefeated?.Invoke();
         if (BossLife <= 0)
         {
             Die();

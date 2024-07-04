@@ -50,4 +50,3 @@ public class ScoreUI : MonoBehaviour
         UpdateUI();
     }
 }
-

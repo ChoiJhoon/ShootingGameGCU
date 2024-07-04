@@ -5,7 +5,7 @@ using UnityEngine.SocialPlatforms.Impl;
 
 public class SuicideBombing : MonoBehaviour
 {
-    public float speed = -5.0f;
+    public float speed = 5.0f;
     public int MobsLife = 10;
     public int mobScore = 20;
 
