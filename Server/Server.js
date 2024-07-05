@@ -19,6 +19,7 @@ app.use(express.json());
 
 // POST /scores 엔드포인트 수정
 app.post('/scores', async (req, res) => {
+    console.log(req.body);
     const { id, score, playTime } = req.body;
 
     let result = {

@@ -6,6 +6,7 @@ public class GameTimeTracker : MonoBehaviour
     public float startTime;
     private bool isPlaying;
     public Text timeText;  // UI Text 컴포넌트를 드래그 앤 드롭으로 할당
+    public float currentTime;
 
     void Start()
     {
@@ -17,7 +18,7 @@ public class GameTimeTracker : MonoBehaviour
     {
         if (isPlaying)
         {
-            float currentTime = Time.time - startTime;
+            currentTime = Time.time - startTime;
             DisplayTime(currentTime);
         }
     }

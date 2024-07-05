@@ -42,7 +42,7 @@ public class ScrollList : MonoBehaviour
                 else
                 {
                     List<Score> scores = scoresList.scores;
-                    DisplayTop10(scores);
+                    DisplayTop10(scores);   
                 }
             }
             catch (ArgumentException e)

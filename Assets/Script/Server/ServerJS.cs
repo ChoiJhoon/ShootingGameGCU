@@ -84,7 +84,7 @@ public class RankMain : MonoBehaviour
             req.cmd = 1000; //(int)Protocols.eType.POST_SCORE;
             req.id = UserNickname.playerName;
             req.score = ScoreUI.score;
-            req.playTime = GameTimeTracker.startTime;
+            req.playTime = GameTimeTracker.currentTime;
 
             //req.score = scriptableObject  score;
             // 직렬화  (오브젝트 -> 문자열)
