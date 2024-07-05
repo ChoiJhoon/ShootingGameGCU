@@ -116,7 +116,6 @@ public class PlayerScript : MonoBehaviour
         // 쉴드 활성화 상태로 변경합니다.
         isShieldActive = true;
 
-        // 일정 시간이 지난 후에 쉴드를 비활성화하고 쿨타임을 적용합니다.
         StartCoroutine(DisableShieldAfterDelay(shieldDuration));
     }
 

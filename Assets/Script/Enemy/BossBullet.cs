@@ -15,7 +15,7 @@ public class BossBullet : MonoBehaviour
     void Start()
     {
         InitializeBulletPool();
-
+        player = GameObject.FindWithTag("Player").transform; // Tag가 "Player"인 오브젝트의 Transform을 가져옴
         StartCoroutine(ShootBullets());
     }
 
@@ -37,22 +37,25 @@ public class BossBullet : MonoBehaviour
             float delay = Random.Range(1f, 5f); // 1에서 5초 사이의 랜덤한 발사 간격
             yield return new WaitForSeconds(delay);
 
-            Vector3 targetPosition = player.position; // 플레이어의 위치를 목표 위치로 설정
-
-            for (int i = 0; i < 3; i++)
+            if (player != null)
             {
-                GameObject bullet = GetNextBulletFromPool();
-                if (bullet != null)
+                Vector3 targetPosition = player.position; // 플레이어의 위치를 목표 위치로 설정
+
+                for (int i = 0; i < 3; i++)
                 {
-                    bullet.transform.position = transform.position;
+                    GameObject bullet = GetNextBulletFromPool();
+                    if (bullet != null)
+                    {
+                        bullet.transform.position = transform.position;
 
-                    Vector3 direction = (targetPosition - transform.position).normalized;
-                    Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
-                    bulletRigidbody.velocity = direction * bulletSpeed;
+                        Vector3 direction = (targetPosition - transform.position).normalized;
+                        Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
+                        bulletRigidbody.velocity = direction * bulletSpeed;
 
-                    bullet.SetActive(true);
+                        bullet.SetActive(true);
 
-                    yield return new WaitForSeconds(0.5f);
+                        yield return new WaitForSeconds(0.5f);
+                    }
                 }
             }
         }

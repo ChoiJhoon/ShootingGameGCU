@@ -25,7 +25,7 @@ public class ScrollList : MonoBehaviour
 
         if (www.result != UnityWebRequest.Result.Success)
         {
-            Debug.LogError("Failed to fetch data: " + www.error);
+            Debug.LogError("Failed to fetch data: " +  www.error);
         }
         else
         {

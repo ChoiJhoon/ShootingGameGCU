@@ -129,6 +129,6 @@ public class MonsterWaveDBReader : MonoBehaviour
     {
         Debug.Log($"Stage: {stage} - Boss defeated!");
         // 다음 스테이지로 넘어갑니다.
-        StartCoroutine(StartStages());
+        StartCoroutine(StartStages());  
     }
 }

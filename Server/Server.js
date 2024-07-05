@@ -101,7 +101,7 @@ const main = async () => {
             console.log('서버가 3030 포트에서 실행 중입니다.');
         });
     } catch (err) {
-        console.error('MongoDB 연결 실패:', err);
+        console.error('MongoDB 연결 실패:', err);   
     }
 };
 

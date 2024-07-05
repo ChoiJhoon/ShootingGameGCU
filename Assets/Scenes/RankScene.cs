@@ -21,4 +21,9 @@ public class RankScene : MonoBehaviour
     {
         SceneManager.LoadScene("Rank");
     }
+
+    public void SceneChange2()
+    {
+        SceneManager.LoadScene("SampleScene");
+    }
 }
