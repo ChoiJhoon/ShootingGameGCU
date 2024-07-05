@@ -9,7 +9,7 @@
     <h1>Top 10 Scores</h1>
     <ul>
         <% scores.forEach(item => { %>
-            <li>ID: <%= item._id %>, Score: <%= item.score %></li>
+            <li>ID: <%= item._id %>, Score: <%= item.score %> <%= item.playTime %></li>
         <% }); %>
     </ul>
 </body>

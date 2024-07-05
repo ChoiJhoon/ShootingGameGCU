@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,87 +7,81 @@ using UnityEngine.UI;
 
 public class ScrollList : MonoBehaviour
 {
-    public GameObject panelPrefab;  // 패널 Prefab
-    public Transform content;       // Content Transform
-    public int poolSize = 10;       // 풀 크기
+    public GameObject rankingContent;
+    public GameObject rankingItemPrefab;
 
-    private Queue<GameObject> panelPool = new Queue<GameObject>();
+    // URL to your server endpoint that returns the top 10 scores
+    private string serverURL = "http://localhost:3030/scores/top10";
 
     void Start()
     {
-        InitializePool();
-        StartCoroutine(FetchScores());
+        StartCoroutine(GetTop10Scores());
     }
 
-    void InitializePool()
+    IEnumerator GetTop10Scores()
     {
-        for (int i = 0; i < poolSize; i++)
-        {
-            GameObject panel = Instantiate(panelPrefab, content);
-            panel.SetActive(false);
-            panelPool.Enqueue(panel);
-        }
-    }
-
-    IEnumerator FetchScores()
-    {
-        UnityWebRequest www = UnityWebRequest.Get("http://localhost:3030/scores/Top10");
+        UnityWebRequest www = UnityWebRequest.Get(serverURL);
         yield return www.SendWebRequest();
 
-        if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+        if (www.result != UnityWebRequest.Result.Success)
         {
-            Debug.LogError(www.error);
+            Debug.LogError("Failed to fetch data: " + www.error);
         }
         else
         {
-            List<Score> scores = JsonUtility.FromJson<ScoreList>("{\"scores\":" + www.downloadHandler.text + "}").scores;
-            PopulateList(scores);
-        }
-    }
-
-    void PopulateList(List<Score> scores)
-    {
-        for (int i = 0; i < scores.Count; i++)
-        {
-            GameObject panel = GetPanelFromPool();
-            if (panel != null)
+            try
             {
-                panel.GetComponentInChildren<Text>().text = (i + 1).ToString() + "위 - " + scores[i].score;
-                panel.SetActive(true);
-                panel.transform.SetSiblingIndex(i);  // 패널 순서를 설정합니다.
+                // Parse JSON response
+                string jsonResponse = www.downloadHandler.text;
+                ScoresList scoresList = JsonUtility.FromJson<ScoresList>(jsonResponse);
+
+                if (scoresList == null || scoresList.scores == null)
+                {
+                    Debug.LogError("Failed to parse JSON: scores list is null");
+                }
+                else
+                {
+                    List<Score> scores = scoresList.scores;
+                    DisplayTop10(scores);
+                }
+            }
+            catch (ArgumentException e)
+            {
+                Debug.LogError("JSON parse error: " + e.Message);
             }
         }
     }
 
-    GameObject GetPanelFromPool()
+
+    public void DisplayTop10(List<Score> scores)
     {
-        if (panelPool.Count > 0)
+        // Clear existing ranking items
+        foreach (Transform child in rankingContent.transform)
         {
-            return panelPool.Dequeue();
+            Destroy(child.gameObject);
         }
-        else
+
+        // Instantiate new ranking items
+        foreach (Score score in scores)
         {
-            Debug.LogWarning("패널 풀에 더 이상 사용 가능한 패널이 없습니다.");
-            return null;
+            GameObject rankingItem = Instantiate(rankingItemPrefab, rankingContent.transform);
+            rankingItem.transform.Find("PlayerName").GetComponent<Text>().text = score._id;
+            rankingItem.transform.Find("Score").GetComponent<Text>().text = score.score.ToString();
+            rankingItem.transform.Find("PlayTime").GetComponent<Text>().text = score.playTime;
         }
     }
 
-    void ReturnPanelToPool(GameObject panel)
+    [System.Serializable]
+    public class Score
     {
-        panel.SetActive(false);
-        panelPool.Enqueue(panel);
+        public string _id;
+        public int score;
+        public string playTime;
     }
-}
 
-[System.Serializable]
-public class Score
-{
-    public string _id;
-    public int score;
-}
-
-[System.Serializable]
-public class ScoreList
-{
-    public List<Score> scores;
+    [System.Serializable]
+    private class ScoresList
+    {
+        public List<Score> scores;
+    }
 }

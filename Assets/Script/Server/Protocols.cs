@@ -14,6 +14,7 @@ public class Protocols : MonoBehaviour
         {
             public string id;
             public int score;
+            public float playTime;
         }
 
         public class res_scores : common
@@ -25,6 +26,7 @@ public class Protocols : MonoBehaviour
         {
             public string id;
             public int score;
+            public float playTime;
         }
 
         public class res_scores_top3 : res_scores

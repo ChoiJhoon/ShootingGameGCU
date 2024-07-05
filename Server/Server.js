@@ -12,14 +12,14 @@ const client = new MongoClient(url);
 
 // EJS 템플릿 설정
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '*/views'));
+app.set('views', path.join(__dirname, '/views'));
 
 // JSON 파싱 미들웨어 설정
 app.use(express.json());
 
 // POST /scores 엔드포인트 수정
 app.post('/scores', async (req, res) => {
-    const { id, score } = req.body;
+    const { id, score, playTime } = req.body;
 
     let result = {
         cmd: -1,
@@ -27,7 +27,7 @@ app.post('/scores', async (req, res) => {
     };
 
     try {
-        await collection.insertOne({ _id: id, score });
+        await collection.insertOne({ _id: id, score, playTime });
         result.cmd = 1001;
         result.message = '점수가 신규 등록 되었습니다.';
 
@@ -42,9 +42,9 @@ app.post('/scores', async (req, res) => {
 // GET /scores/top10 엔드포인트 수정
 app.get('/scores/Top10', async (req, res) => {
     try {
-        const top10Scores = await collection.find().sort({ score: -1 }).limit(10).toArray();
+        const top10Scores = await collection.find().sort({ score: -1 }).toArray();
 
-        res.render('Top10', { scores: top10Scores }); // top10.ejs를 렌더링하며 데이터 전달
+        res.json({ scores: top10Scores }); // top10.ejs를 렌더링하며 데이터 전달
     } catch (error) {
         console.error('GET /scores/top10 Error:', error);
         res.status(500).send('Server Error');
@@ -87,7 +87,6 @@ app.get('/scores/:id', async (req, res) => {
     }
 });
 
-
 // 서버 시작 함수
 const main = async () => {
     try {
@@ -97,7 +96,7 @@ const main = async () => {
         collection = db.collection('Nick_Score');
 
         // 서버 시작
-        app.listen(3031, () => {
+        app.listen(3030, () => {
             console.log('서버가 3030 포트에서 실행 중입니다.');
         });
     } catch (err) {

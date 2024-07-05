@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using Newtonsoft.Json;
 using UnityEngine.Networking;
 using System.Text;
+using UnityEngine.SceneManagement;
+
 
 public class RankMain : MonoBehaviour
 {
@@ -15,6 +17,7 @@ public class RankMain : MonoBehaviour
     public string postUri;
 
     public NickName UserNickname;
+    public GameTimeTracker GameTimeTracker;
 
     public Button btnGetTop3;
     public Button btnGetId;
@@ -40,6 +43,11 @@ public class RankMain : MonoBehaviour
         if (UserNickname == null)
         {
             Debug.LogError("UserNickname is not assigned.");
+            return;
+        }
+        if (GameTimeTracker == null)
+        {
+            Debug.LogError("GameTimeTracker is not assigned.");
             return;
         }
 
@@ -76,6 +84,8 @@ public class RankMain : MonoBehaviour
             req.cmd = 1000; //(int)Protocols.eType.POST_SCORE;
             req.id = UserNickname.playerName;
             req.score = ScoreUI.score;
+            req.playTime = GameTimeTracker.startTime;
+
             //req.score = scriptableObject  score;
             // 직렬화  (오브젝트 -> 문자열)
             var json = JsonConvert.SerializeObject(req);
@@ -140,5 +150,31 @@ public class RankMain : MonoBehaviour
             Debug.LogFormat("{0}\n{1}\n{2}", webRequest.responseCode, webRequest.downloadHandler.data, webRequest.downloadHandler.text);
             callback(webRequest.downloadHandler.text);
         }
+    }
+    private IEnumerator LoadRankingScene(List<ScrollList.Score> scores)
+    {
+        // 랭킹 씬 비동기 로드
+        var asyncLoad = SceneManager.LoadSceneAsync("Rank", LoadSceneMode.Additive);
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+
+        // RankDisplay 스크립트에 데이터 전달
+        ScrollList rankDisplay = FindObjectOfType<ScrollList>();
+        if (rankDisplay != null)
+        {
+            rankDisplay.DisplayTop10(scores);
+        }
+        else
+        {
+            Debug.LogError("랭킹 씬에 RankDisplay 스크립트를 찾을 수 없습니다.");
+        }
+    }
+
+    [System.Serializable]
+    public class ScoreResponse
+    {
+        public List<ScrollList.Score> scores;
     }
 }
